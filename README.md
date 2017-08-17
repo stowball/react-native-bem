@@ -2,7 +2,7 @@
 
 A BEM-inspired method to styling React Native components.
 
-The [BEM](http://getbem.com) methodology and naming convention allows us to reduce the complexity of styling and develop with speed and predictability. By following a similar approach to naming, modifiers and states (not to be confused with a component's internal state), we can create self-contained, easily styled components in any situation.
+The [BEM](http://getbem.com) methodology and naming convention allows us to reduce the complexity of styling, and develop with speed and predictability. By following a similar approach to naming, modifiers and states (not to be confused with a component's internal state), we can create self-contained, easily styled components in any situation.
 
 [![npm version](https://badge.fury.io/js/react-native-bem.svg)](https://badge.fury.io/js/react-native-bem)
 [![Build Status](https://travis-ci.org/stowball/react-native-bem.svg?branch=master)](https://travis-ci.org/stowball/react-native-bem)
@@ -21,11 +21,11 @@ It exports three functions:
 
     Its signature is `bem (blockName: string, props: Object, rules: Object)`. `blockName` is the kebab-cased name of the component to style, `props` is the component's props and `rules` is the style object (from style.js).
 
-* `renderBemChild()`: exported as a named function, this can be used in place of rendering `{prop.children}` to pass a BEM selector to a specific child.
+* `renderBemChild()`: exported as a named function, this can be used in place of rendering `{props.children}` to pass a BEM selector to a specific child.
 
     Its signature is `renderBemChild (props: Object, style: Array<any>, index: number = 0)`. `props` is the component's props, `style` is the result of calling `bem()` with a [BEM Mix](https://csswizardry.com/2017/02/code-smells-in-css-revisited/#bem-mixes) selector, and `index` is the index of the child element to style.
 
-* `renderBemChildren()`: exported as a named function, this can be used in place of rendering `{prop.children}` to pass a BEM selector to *all* child.
+* `renderBemChildren()`: exported as a named function, this can be used in place of rendering `{props.children}` to pass a BEM selector to *all* children.
 
     Its signature is `renderBemChildren (props: Object, style: Array<any>)` and is identical to `renderBemChild()` but without `index`.
 
@@ -35,16 +35,16 @@ As with BEM in CSS, a modifier is a flag on a block or element, which is used to
 
 react-native-bem supports two types of modifiers with the `M` prefix:
 
-1. Boolean: The prop `MalignCenter={true}` uses the `--align-center` style definitition.
+1. Boolean: The prop `MalignCenter={true}` uses the `--align-center` style definition.
 2. String: The prop `Malign="right"` uses the `--align-right` style definition.
 
 ### States
 
-While not a part of BEM, [states](https://csswizardry.com/2015/03/more-transparent-ui-code-with-namespaces/#stateful-namespaces-is-has-) are an elegant addition to signify that the piece of UI in question is currently styled a certain way because of certain condition.
+While not a part of BEM per se, [states](https://csswizardry.com/2015/03/more-transparent-ui-code-with-namespaces/#stateful-namespaces-is-has-) are an elegant addition to signify that the piece of UI in question is currently styled a certain way because of specific condition.
 
 Common stateful namespaces begin with `is` and `has`.
 
-react-native-bem state props uses the `S` prefix, like so: `SisDisabled={true}`.
+react-native-bem state props uses the `S` prefix, like so `SisDisabled={true}` which uses the `.is-disabled` style definition.
 
 ## Usage
 
@@ -71,7 +71,7 @@ However, if a Block requires multiple child components:
 
 #### styles.js
 
-This file `export`s  a `default` object with contains keys and style properties for each component.
+This file `export`s  a `default` object which contains keys and style properties for each component.
 
 A component with child components, modifiers and states may look like this:
 
@@ -83,7 +83,7 @@ export default {
     'component-name--modifier': {
         KEY: VALUE_WHEN_MODIFIED
     },
-    'component-name--state': {
+    'component-name.state': {
         KEY: VALUE_WHEN_IN_THIS_STATE
     },
     'component-name__element': {
@@ -92,7 +92,7 @@ export default {
     'component-name--modifier component-name__element': {
         KEY: VALUE_OF_ELEMENT_WHEN_MODIFIED
     },
-    'component-name--state component-name__element': {
+    'component-name.state component-name__element': {
         KEY: VALUE_OF_ELEMENT_WHEN_IN_THIS_STATE
     }
 };
@@ -107,7 +107,8 @@ Similar to using BEM in CSS, component styles are encapsulated within a namespac
 `components/HelloWorld/index.js`
 
 ```js
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { View, Text } from 'react-native';
 import bem from 'react-native-bem';
 import styles from './styles';
@@ -294,7 +295,7 @@ We can see that the additional styles were applied to the `HelloWorld__Text` com
 
 ###### Using a Component's Internal State
 
-Some components, such as a `<TextInput />`, need to be styled differently based on an internal state, such as if it has focus. Instead of cumbersomely alerting parent components to whether it's focused or not and changing a state prop in the view, we can merge in the component's state at `render()` time.
+Some components, such as a `<TextInput />`, need to be styled differently based on an internal state, like when it has focus. Instead of cumbersomely alerting parent components to whether it's focused or not and changing a state prop in the view, we can merge in the component's state to `bem()` at `render()` time.
 
 With the following component:
 
@@ -327,9 +328,7 @@ class TextBox extends Component {
         });
     }
 
-    b (selector) {
-        return bem(selector, Object.assign({}, this.props, this.state), styles);
-    }
+    b = (selector) => bem(selector, Object.assign({}, this.props, this.state), styles)
 
     render () {
         return (
