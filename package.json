@@ -1,6 +1,6 @@
 {
   "name": "react-native-bem",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A BEM-inspired method to styling React Native components",
   "main": "lib/index.js",
   "watch": {
