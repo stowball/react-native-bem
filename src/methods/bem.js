@@ -1,32 +1,23 @@
 // @flow
 import kebabCase from '../helpers/kebabCase';
 
-export default function bem (blockName: string, props: Object, rules: Object) {
-    let blockNames = [blockName];
+export default function bem (selector: string, props: Object, rules: Object) {
+    const parentName = selector.indexOf('__') > -1 ? selector.split('__')[0] : null;
 
-    if (props.blockName) {
-        blockNames.push(props.blockName);
-    }
+    const styles = Object.keys(props).reduce((arr: Array<any>, prop: string) => {
+        if (props[prop] && (prop.indexOf('M') === 0 || prop.indexOf('S') === 0)) {
+            const modifier = prop.indexOf('M') === 0 ? `--${kebabCase(prop, 1)}${props[prop] === true ? '' : `-${props[prop]}`}` : '';
+            const state = prop.indexOf('S') === 0 ? `.${kebabCase(prop, 1)}` : '';
 
-    let styles = blockNames.map((block: string) => {
-        const parent = block.indexOf('__') > -1 ? block.split('__')[0] : null;
-        let style = Object.assign({}, rules[block]);
+            arr.push(rules[`${selector}${state}${modifier}`]);
 
-        return Object.keys(props).reduce((obj: Object, prop: string) => {
-            if (props[prop] && (prop.indexOf('M') === 0 || prop.indexOf('S') === 0)) {
-                const modifier = prop.indexOf('M') === 0 ? `--${kebabCase(prop, 1)}${props[prop] === true ? '' : `-${props[prop]}`}` : '';
-                const state = prop.indexOf('S') === 0 ? `.${kebabCase(prop, 1)}` : '';
-
-                obj = Object.assign(style, rules[`${block}${state}${modifier}`]);
-
-                if (parent && rules[`${parent}${modifier}${state} ${block}`]) {
-                    obj = Object.assign(obj, rules[`${parent}${modifier}${state} ${block}`]);
-                }
+            if (parentName) {
+                arr.push(rules[`${parentName}${modifier}${state} ${selector}`]);
             }
+        }
 
-            return obj;
-        }, style);
-    });
+        return arr;
+    }, [rules[selector]]);
 
-    return [...styles, props.style || {}];
+    return [...styles, props.style].filter(Boolean);
 }

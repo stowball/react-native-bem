@@ -1,15 +1,34 @@
 # react-native-bem
 
-A BEM-inspired method to styling React Native components.
-
-The [BEM](http://getbem.com) methodology and naming convention allows us to reduce the complexity of styling, and develop with speed and predictability. By following a similar approach to naming, modifiers and states (not to be confused with a component's internal state), we can create self-contained, easily styled components in any situation.
+**A tiny, fast, BEM-inspired method to styling React Native components.**
 
 [![npm version](https://badge.fury.io/js/react-native-bem.svg)](https://badge.fury.io/js/react-native-bem)
 [![Build Status](https://travis-ci.org/stowball/react-native-bem.svg?branch=master)](https://travis-ci.org/stowball/react-native-bem)
 
+The [BEM](http://getbem.com) methodology and naming convention allows us to reduce the complexity of styling, and develop with speed and predictability. By following a similar approach to naming, modifiers and states (not to be confused with a component's internal state), we can create self-contained, easily styled components in any situation.
+
+## Table of Contents
+
+- [Installation](#installation)
+- [Features](#features)
+  - [Modifiers](#modifiers)
+  - [States](#states)
+- [Usage](#usage)
+  - [Creating Components](#creating-components)
+    - [Component Architecture](#component-architecture)
+  - [Styling Components](#styling-components)
+    - [styles.js](#stylesjs)
+    - [Common Usage](#common-usage)
+      - [Component Definition](#component-definition)
+      - [Styles Definition](#styles-definition)
+    - [Usage within a View](#usage-within-a-view)
+    - [Advanced Usage](#advanced-usage)
+      - [Manipulating Children](#manipulating-children)
+        - [Using a Component's Internal State](#using-a-components-internal-state)
+
 ## Installation
 
-`npm i react-native-bem --save`
+`npm install react-native-bem --save`
 
 ## Features
 
@@ -19,7 +38,7 @@ It exports three functions:
 
 * `bem()`:  exported as the `default` function, which is used to apply styling to components.
 
-    Its signature is `bem (blockName: string, props: Object, rules: Object)`. `blockName` is the kebab-cased name of the component to style, `props` is the component's props and `rules` is the style object (from style.js).
+    Its signature is `bem (selector: string, props: Object, rules: Object)`. `selector` is the kebab-cased name of the component to style, `props` is the component's props and `rules` is the style object (from styles.js).
 
 * `renderBemChild()`: exported as a named function, this can be used in place of rendering `{props.children}` to pass a BEM selector to a specific child.
 
@@ -28,6 +47,8 @@ It exports three functions:
 * `renderBemChildren()`: exported as a named function, this can be used in place of rendering `{props.children}` to pass a BEM selector to *all* children.
 
     Its signature is `renderBemChildren (props: Object, style: Array<any>)` and is identical to `renderBemChild()` but without `index`.
+
+*Note: As of v0.2.0, react-native-bem now utilizes `StyleSheet`s instead of plain JavaScript objects for improved performance*.
 
 ### Modifiers
 
@@ -71,12 +92,14 @@ However, if a Block requires multiple child components:
 
 #### styles.js
 
-This file `export`s  a `default` object which contains keys and style properties for each component.
+This file `export`s  a `default` [`StyleSheet`](https://facebook.github.io/react-native/docs/stylesheet.html) object which contains keys and style properties for each component.
 
 A component with child components, modifiers and states may look like this:
 
 ```js
-export default {
+import { StyleSheet } from 'react-native';
+
+export default StyleSheet.create({
     'component-name': {
         KEY: VALUE
     },
@@ -95,14 +118,14 @@ export default {
     'component-name.state component-name__element': {
         KEY: VALUE_OF_ELEMENT_WHEN_IN_THIS_STATE
     }
-};
+});
 ```
 
 Similar to using BEM in CSS, component styles are encapsulated within a namespace, and developers can clearly see the styles for all components, children and variations.
 
-##### Common Usage
+#### Common Usage
 
-###### Component Definition
+##### Component Definition
 
 `components/HelloWorld/index.js`
 
@@ -134,12 +157,14 @@ HelloWorld.propTypes = {
 export default HelloWorld;
 ```
 
-###### Styles Definition
+##### Styles Definition
 
 `components/HelloWorld/styles.js`
 
 ```js
-export default {
+import { StyleSheet } from 'react-native';
+
+export default StyleSheet.create({
     'hello-world': {
         backgroundColor: '#000',
         marginBottom: 5,
@@ -162,10 +187,10 @@ export default {
     'hello-world.a-state-name hello-world__text': {
         color: '#ff0'
     }
-};
+});
 ```
 
-##### Usage within a View
+#### Usage within a View
 
 `View.js`
 
@@ -191,9 +216,9 @@ which results in:
 
 So, you can see that with adding and removing props, either at run-time or by default, you will be able to quickly adapt your components' appearance to reflect the current state of the application.
 
-##### Advanced Usage
+#### Advanced Usage
 
-###### Manipulating Children
+##### Manipulating Children
 
 There may be times where you wish to pass in child components from within your view, like so:
 
@@ -267,12 +292,14 @@ If we update our existing files to this:
 `styles.js`
 
 ```js
-export default {
+import { StyleSheet } from 'react-native';
+
+export default StyleSheet.create({
     … existing styles
     'bem-mix__text': {
         color: '#0ff'
     }
-};
+});
 ```
 
 `HelloWorld.js`
@@ -328,7 +355,7 @@ class TextBox extends Component {
         });
     }
 
-    b = (selector) => bem(selector, Object.assign({}, this.props, this.state), styles)
+    b = (selector) => bem(selector, { ...this.props, ...this.state }, styles)
 
     render () {
         return (
@@ -348,7 +375,9 @@ export default TextBox;
 and its related `styles.js`
 
 ```js
-export default {
+import { StyleSheet } from 'react-native';
+
+export default StyleSheet.create({
     'text-box': {
         backgroundColor: '#fff',
         borderColor: '#000',
@@ -362,7 +391,7 @@ export default {
     'text-box.is-focused': {
         borderColor: '#00f'
     }
-};
+});
 ```
 
 Because the `TextBox` component's `b()` helper merges the component's props with its internal state (which has a correctly named `SisFocused` property), it apply styles for when the `TextInput` is focused!
