@@ -212,7 +212,7 @@ render() {
 
 which results in:
 
-<img src="https://s27.postimg.org/qn6dilyr7/react_native_bem_1.png" width="300" alt="Demonstrating the Hello World component with all the modifiers and states applied" />
+<img src="https://s27.postimg.cc/qn6dilyr7/react-native-bem-1.png" width="300" alt="Demonstrating the Hello World component with all the modifiers and states applied" />
 
 So, you can see that with adding and removing props, either at run-time or by default, you will be able to quickly adapt your components' appearance to reflect the current state of the application.
 
@@ -318,7 +318,7 @@ const HelloWorld = (props) => {
 
 We can see that the additional styles were applied to the `HelloWorld__Text` components, turning them cyan.
 
-<img src="https://s14.postimg.org/w3alwgoox/react_native_bem_2.png" width="300" alt="Demonstrating the Hello World__Text component has inherited styles from the BEM mix" />
+<img src="https://s14.postimg.cc/w3alwgoox/react-native-bem-2.png" width="300" alt="Demonstrating the Hello World__Text component has inherited styles from the BEM mix" />
 
 ###### Using a Component's Internal State
 
@@ -396,7 +396,7 @@ export default StyleSheet.create({
 
 Because the `TextBox` component's `b()` helper merges the component's props with its internal state (which has a correctly named `SisFocused` property), it apply styles for when the `TextInput` is focused!
 
-<img src="https://s24.postimg.org/lr1je8bz9/react_native_bem_3.gif" width="400" alt="Using BEM with internal state to set a TextInput's focus style" />
+<img src="https://s24.postimg.cc/lr1je8bz9/react-native-bem-3.gif" width="400" alt="Using BEM with internal state to set a TextInput's focus style" />
 
 ---
 
