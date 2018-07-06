@@ -19,5 +19,5 @@ export default function bem (selector: string, props: Object, rules: Object) {
         return arr;
     }, [rules[selector]]);
 
-    return [...styles, props.style].filter(Boolean);
+    return [...styles, !parentName && props.style].filter(Boolean);
 }

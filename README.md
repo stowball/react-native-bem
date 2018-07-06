@@ -400,5 +400,5 @@ Because the `TextBox` component's `b()` helper merges the component's props with
 
 ---
 
-Copyright (c) 2017 [Matt Stow](http://mattstow.com)  
+Copyright (c) 2018 [Matt Stow](http://mattstow.com)  
 Licensed under the MIT license *(see [LICENSE](https://github.com/stowball/react-native-bem/blob/master/LICENSE) for details)*
